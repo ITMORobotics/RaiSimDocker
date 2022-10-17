@@ -1,0 +1,92 @@
+ARG BASE_DIST
+ARG CUDA_VERSION
+
+FROM nvidia/cuda:${CUDA_VERSION}-base-${BASE_DIST}
+
+# Timezone Configuration
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglvnd0 \
+    libgl1 \
+    libglx0 \
+    libegl1  \
+    libgles2  \
+    libxcb1-dev \
+    wget \
+    vulkan-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+#set VULKAN_SDK_VERSION as a build-arg=`curl https://vulkan.lunarg.com/sdk/latest/linux.txt`
+ARG VULKAN_SDK_VERSION
+# Download the Vulkan SDK and extract the headers, loaders, layers and binary utilities
+RUN wget -q --show-progress \
+    --progress=bar:force:noscroll \
+    https://sdk.lunarg.com/sdk/download/latest/linux/vulkan_sdk.tar.gz \
+    -O /tmp/vulkansdk-linux-x86_64-${VULKAN_SDK_VERSION}.tar.gz \ 
+    && echo "Installing Vulkan SDK ${VULKAN_SDK_VERSION}" \
+    && mkdir -p /opt/vulkan \
+    && tar -xf /tmp/vulkansdk-linux-x86_64-${VULKAN_SDK_VERSION}.tar.gz -C /opt/vulkan \
+    && mkdir -p /usr/local/include/ && cp -ra /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/include/* /usr/local/include/ \
+    && mkdir -p /usr/local/lib && cp -ra /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/lib/* /usr/local/lib/ \
+    && cp -a /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/lib/libVkLayer_*.so /usr/local/lib \
+    && mkdir -p /usr/local/share/vulkan/explicit_layer.d \
+    && cp /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/etc/vulkan/explicit_layer.d/VkLayer_*.json /usr/local/share/vulkan/explicit_layer.d \
+    && mkdir -p /usr/local/share/vulkan/registry \
+    && cp -a /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/share/vulkan/registry/* /usr/local/share/vulkan/registry \
+    && cp -a /opt/vulkan/${VULKAN_SDK_VERSION}/x86_64/bin/* /usr/local/bin \
+    && ldconfig \
+    && rm /tmp/vulkansdk-linux-x86_64-${VULKAN_SDK_VERSION}.tar.gz && rm -rf /opt/vulkan
+
+# Setup the required capabilities for the container runtime    
+ENV NVIDIA_DRIVER_CAPABILITIES compute,graphics,utility
+
+# Licensed under the NGC Deep Learning Container License
+COPY NGC-DL-CONTAINER-LICENSE.txt /
+
+RUN apt update && apt install -y git \
+                                cmake \
+                                clang \
+                                python3 \
+                                python3-dev \
+                                python3-pip \
+                                python3-distutils \
+                                libpython3-dev \
+                                libeigen3-dev 
+         
+RUN apt install -y zsh \
+                tmux \
+                vim \
+                nano
+
+# RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" -y
+# RUN chsh -s $(which zsh)
+
+# RUN apt install -y \
+                # libx11-dev liblapack-dev libv4l-dev libzbar-dev libpthread-stubs0-dev libsdl-dev libsdl-image1.2-dev
+
+
+# RaiSim Install
+RUN apt install -y minizip ffmpeg
+RUN git clone https://github.com/raisimTech/raisimlib
+
+RUN cd raisimlib \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DCMAKE_INSTALL_PREFIX=/raisim_build -DRAISIM_EXAMPLE=ON -DRAISIM_PY=ON -DPYTHON_EXECUTABLE=$(python3 -c "import sys; print(sys.executable)") \
+    && make install -j4
+
+# RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/raisim_build/lib \
+#     && export PYTHONPATH=$PYTHONPATH:/raisim_build/lib
+
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/raisim_build/lib"  >> ~/.bashrc && \
+    echo "export PYTHONPATH=$PYTHONPATH:/raisim_build/lib"  >> ~/.bashrc
+
+# Python package install
+RUN pip install numpy scipy matplotlib
+
+
+
+

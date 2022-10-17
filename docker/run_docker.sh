@@ -14,6 +14,9 @@ if [[ $1 = "--nvidia" ]] || [[ $1 = "-n" ]]
                 -e XAUTHORITY \
                 -v /dev:/dev \
                 -v $ROOT_DIR/workspace:/workspace \
+                -v /etc/vulkan/icd.d/nvidia_icd.json:/etc/vulkan/icd.d/nvidia_icd.json \
+                -v /etc/vulkan/implicit_layer.d/nvidia_layers.json:/etc/vulkan/implicit_layer.d/nvidia_layers.json \
+                -v /usr/share/glvnd/egl_vendor.d/10_nvidia.json:/usr/share/glvnd/egl_vendor.d/10_nvidia.json \
                --net=host \
                --privileged \
                --name raisim raisim-img
