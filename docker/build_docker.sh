@@ -3,9 +3,17 @@
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 EXEC_PATH=$PWD
 
+echo "Start building in: $ROOT_DIR"
+
 cd $ROOT_DIR
 
-if [[ $1 = "--vulkan" ]] || [[ $1 = "-v" ]]
+if [[ $1 = "--ros" ]] || [[ $1 = "-r" ]]
+  then
+    docker build -t raisim-img -f $ROOT_DIR/docker/Dockerfile.rosOpenGL $ROOT_DIR \
+                                  --network=host \
+                                  --build-arg BASE_DIST=ubuntu20.04 \
+                                  --build-arg CUDA_VERSION=11.7.1
+elif [[ $1 = "--vulkan" ]] || [[ $1 = "-v" ]]
   then
     docker build -t raisim-img -f $ROOT_DIR/docker/Dockerfile.nvidiaVulkan $ROOT_DIR \
                                   --network=host \

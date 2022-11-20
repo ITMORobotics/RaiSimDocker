@@ -1,0 +1,3 @@
+[submodule "workspace/raisim_ros_wrapper"]
+	path = workspace/raisim_ros_wrapper
+	url = git@gitlab.com:beerlab/unitree_a1/raisim_ros_wrapper.git
