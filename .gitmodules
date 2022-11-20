@@ -1,3 +1,15 @@
-[submodule "workspace/raisim_ros_wrapper"]
-	path = workspace/raisim_ros_wrapper
+[submodule "workspace/ws-ros1/raisim_ros_wrapper"]
+	path = workspace/ws-ros1/raisim_ros_wrapper
 	url = git@gitlab.com:beerlab/unitree_a1/raisim_ros_wrapper.git
+[submodule "workspace/ws-ros1/raisim_unitree_ros_driver"]
+	path = workspace/ws-ros1/raisim_unitree_ros_driver
+	url = git@gitlab.com:beerlab/unitree_a1/raisim_unitree_ros_driver.git
+[submodule "workspace/ws-ros1/unitree_legged_msgs"]
+	path = workspace/ws-ros1/unitree_legged_msgs
+	url = git@gitlab.com:beerlab/unitree_a1/unitree_legged_msgs.git
+[submodule "workspace/ws-ros1/be2r_cmpc_unitree"]
+	path = workspace/ws-ros1/be2r_cmpc_unitree
+	url = git@gitlab.com:beerlab/unitree_a1/be2r_cmpc_unitree.git
+[submodule "workspace/ws-ros1/a1_description"]
+	path = workspace/ws-ros1/a1_description
+	url = git@gitlab.com:beerlab/unitree_a1/a1_description.git
