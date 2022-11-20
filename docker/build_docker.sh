@@ -9,7 +9,7 @@ cd $ROOT_DIR
 
 if [[ $1 = "--ros" ]] || [[ $1 = "-r" ]]
   then
-    docker build -t raisim-img -f $ROOT_DIR/docker/Dockerfile.rosOpenGL $ROOT_DIR \
+    docker build -t raisim-img -f $ROOT_DIR/docker/Dockerfile.ros $ROOT_DIR \
                                   --network=host \
                                   --build-arg BASE_DIST=ubuntu20.04 \
                                   --build-arg CUDA_VERSION=11.7.1

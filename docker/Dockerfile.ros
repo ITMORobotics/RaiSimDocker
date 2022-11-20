@@ -41,21 +41,33 @@ RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E
 RUN curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | apt-key add -
 RUN apt update
 RUN apt install -y ros-$ROS1_DISTRO-ros-base
-RUN echo "source /opt/ros/$ROS2_DISTRO/setup.bash"  >> ~/.bashrc
+RUN echo "source /opt/ros/$ROS1_DISTRO/setup.bash"  >> ~/.bashrc
+RUN apt install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+RUN apt install -y python3-rosdep
+RUN rosdep init && rosdep update
+
+RUN sh \
+    -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" \
+        > /etc/apt/sources.list.d/ros-latest.list'
+RUN wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+RUN apt update
+RUN apt install -y python3-catkin-tools
+
 
 # Common ROS configuring
 RUN echo "source /workspace/devel/setup.bash"  >> ~/.bashrc
+RUN source ~/.bashrc
+
 # RaiSim Install
 RUN apt install -y minizip ffmpeg
 
+COPY ./workspace /workspace
+COPY workspace/activation.raisim /root/.raisim/activation.raisim
 WORKDIR /workspace
-# Configure gitlab acces via token:
 
-RUN cd /workspace/raisim_ros_wrapper \
-    && mkdir build \
-    && cd build \
-    && cmake .. -DCMAKE_INSTALL_PREFIX=/raisim_build -DRAISIM_EXAMPLE=ON -DRAISIM_PY=ON -DPYTHON_EXECUTABLE=$(python3 -c "import sys; print(sys.executable)") \
-    && make install -j8
+RUN cd ws-ros1 \
+    && catkin init
+    && catkin build
 
 RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/raisim_build/lib"  >> ~/.bashrc && \
     echo "export PYTHONPATH=$PYTHONPATH:/raisim_build/lib/python3/dist-packages"  >> ~/.bashrc
