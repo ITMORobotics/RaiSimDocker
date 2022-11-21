@@ -1,13 +1,11 @@
-# RaiSimDocker
-Main question - ACTIVATION
+# unitree_common
+This is a common repository that contain links on working repositories with Unitree Controller package, Navigation package and Visual-Inertial Odometry package.
 
-## Setup
+# Getting started for simulator
+Get raisim activation key here [Get Raisim key](https://raisim.com/sections/License.html)
 
-    sudo chmod +x docker/*sh
+Clone commmon repository:
+```bash
+git clone --recursive git@gitlab.com:beerlab/unitree_a1/unitree_common.git
+```
 
-If you use PC with Nvidia graphics card use **-n** or **--nvidia** with next commands:
-
-    docker/build_docker.sh 
-or
-
-    docker/build_docker.sh --nvidia

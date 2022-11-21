@@ -65,7 +65,8 @@ RUN apt install -y ros-$ROS1_DISTRO-tf
 RUN apt install -y ros-$ROS1_DISTRO-pcl-conversions ros-$ROS1_DISTRO-pcl-ros ros-$ROS1_DISTRO-grid-map
 RUN apt install -y ros-$ROS1_DISTRO-cv-bridge ros-$ROS1_DISTRO-costmap-2d 
 RUN apt install -y ros-$ROS1_DISTRO-filters ros-$ROS1_DISTRO-octomap ros-$ROS1_DISTRO-octomap-msgs
-RUN apt install -y ros-$ROS1_DISTRO-rviz
+RUN apt install -y ros-$ROS1_DISTRO-rviz ros-$ROS1_DISTRO-xacro
+RUN apt install -y ros-$ROS1_DISTRO-joy ros-$ROS1_DISTRO-robot-state-publisher
 
 # Common ROS configuring
 RUN source ~/.bashrc
