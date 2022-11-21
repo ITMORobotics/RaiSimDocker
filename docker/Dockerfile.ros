@@ -21,6 +21,10 @@ RUN apt update && apt install -y git \
 
 RUN apt install -y vim nano
 
+# Python package install
+RUN pip3 install --upgrade pip
+RUN pip3 install numpy scipy matplotlib
+
 # ROS2 Install
 ENV ROS2_DISTRO=galactic
 RUN apt install -y software-properties-common
@@ -34,6 +38,10 @@ RUN apt install -y ros-$ROS2_DISTRO-ros-base
 RUN apt install -y ros-dev-tools
 RUN echo "source /opt/ros/$ROS2_DISTRO/setup.bash"  >> ~/.bashrc
 
+
+# RaiSim Dependency Install
+RUN apt install -y minizip ffmpeg
+
 # ROS1 Install
 ENV ROS1_DISTRO=noetic
 RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" | tee /etc/apt/sources.list.d/ros-focal.list
@@ -46,33 +54,19 @@ RUN apt install -y python3-rosdep python3-rosinstall python3-rosinstall-generato
 RUN apt install -y python3-rosdep
 RUN rosdep init && rosdep update
 
+# Install ROS1 Dependency
 RUN sh \
     -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" \
         > /etc/apt/sources.list.d/ros-latest.list'
 RUN wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 RUN apt update
 RUN apt install -y python3-catkin-tools
-
+RUN apt install -y ros-$ROS1_DISTRO-tf
+RUN apt install -y ros-$ROS1_DISTRO-pcl-conversions
+RUN apt install -y ros-$ROS1_DISTRO-pcl-ros
+RUN apt install -y ros-kinetic-cv-bridge
 
 # Common ROS configuring
-RUN echo "source /workspace/devel/setup.bash"  >> ~/.bashrc
 RUN source ~/.bashrc
 
-# RaiSim Install
-RUN apt install -y minizip ffmpeg
-
-COPY ./workspace /workspace
 COPY workspace/activation.raisim /root/.raisim/activation.raisim
-WORKDIR /workspace
-
-RUN cd ws-ros1 \
-    && catkin init
-    && catkin build
-
-RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/raisim_build/lib"  >> ~/.bashrc && \
-    echo "export PYTHONPATH=$PYTHONPATH:/raisim_build/lib/python3/dist-packages"  >> ~/.bashrc
-
-COPY workspace/activation.raisim /root/.raisim/activation.raisim
-
-# Python package install
-RUN pip install numpy scipy matplotlib
