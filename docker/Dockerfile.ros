@@ -73,7 +73,6 @@ RUN source ~/.bashrc
 
 COPY workspace/activation.raisim /root/.raisim/activation.raisim
 
-
 # Install lcm (https://lcm-proj.github.io/build_instructions.html)
 # This is a dirty dependency, I dont know why it used in simulator -_- 
 RUN apt install -y libglib2.0-dev
