@@ -13,6 +13,15 @@
 [submodule "workspace/ws-ros1/src/unitree_legged_msgs"]
 	path = workspace/ws-ros1/src/unitree_legged_msgs
 	url = git@gitlab.com:beerlab/unitree_a1/unitree_legged_msgs.git
-[submodule "workspace/ws-ros1/src/grid_map"]
-	path = workspace/ws-ros1/src/grid_map
-	url = https://github.com/ANYbotics/grid_map.git
+[submodule "workspace/ws-ros1/src/kindr"]
+	path = workspace/ws-ros1/src/kindr
+	url = https://github.com/anybotics/kindr.git
+[submodule "workspace/ws-ros1/src/kindr_ros"]
+	path = workspace/ws-ros1/src/kindr_ros
+	url = https://github.com/anybotics/kindr_ros.git
+[submodule "workspace/lcm"]
+	path = workspace/lcm
+	url = https://github.com/lcm-proj/lcm.git
+[submodule "workspace/ws-ros1/src/unitree_legged_sdk"]
+	path = workspace/ws-ros1/src/unitree_legged_sdk
+	url = git@gitlab.com:beerlab/unitree_a1/unitree_legged_sdk.git

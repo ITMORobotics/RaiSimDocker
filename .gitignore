@@ -1,1 +1,5 @@
 **/activation.raisim
+build/
+devel/
+logs/
+.catkin_tools/
